@@ -1,0 +1,14 @@
+{
+    "name": "jsellejr/verge",
+    "description": "Social Media Demno App that uses CouchDB",
+    "type": "project",
+    "require": {
+        "php-on-couch/php-on-couch": "^2.0"
+    },
+    "authors": [
+        {
+            "name": "John Selle",
+            "email": "jsellejr@gmail.com"
+        }
+    ]
+}
