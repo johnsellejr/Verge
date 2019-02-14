@@ -237,6 +237,39 @@ class CouchAdmin
     }
 
     /**
+     * create a user with extended attributes
+     *
+     * @param string $login user login
+     * @param string $password user password
+     * @param string $fullname user full_name
+     * @param string $email user email
+     * @param array $roles add additionnal roles to the new user
+     * @return stdClass CouchDB user creation response (the same as a document storage response)
+     * @throws InvalidArgumentException
+     */
+    public function createUserExtended($full_name, $email, $login, $password, $roles = [])
+    {
+        $pwdStr = (string)$password;
+        if (strlen($login) < 1) {
+            throw new InvalidArgumentException("Login can't be empty");
+        }
+        if (strlen($pwdStr) < 1) {
+            throw new InvalidArgumentException("Password can't be empty");
+        }
+        $user = new stdClass();
+        $user->salt = sha1(microtime() . mt_rand(1000000, 9999999), false);
+        $user->password_sha = sha1($pwdStr . $user->salt, false);
+        $user->name = $login;
+        $user->full_name = $full_name;
+        $user->email = $email;
+        $user->type = "user";
+        $user->roles = $roles;
+        $user->_id = self::USER_PREFIX . $login;
+        $client = new CouchClient($this->client->dsn(), $this->usersdb, $this->client->options());
+        return $client->storeDoc($user);
+    }
+    
+    /**
      * Permanently removes a CouchDB User
      *
      *

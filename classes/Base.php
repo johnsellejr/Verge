@@ -7,6 +7,7 @@ abstract class Base
     {
         $this->type = $type;
     }
+    
     public function __get($property) {
         return $this->$property;
     }

@@ -20,7 +20,9 @@ $srcDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor';
 require $srcDir . DIRECTORY_SEPARATOR . 'autoload.php';
 
 //We import the classes that we need
+use PHPOnCouch\Couch;
 use PHPOnCouch\CouchClient;
+use PHPOnCouch\CouchAdmin;
 use PHPOnCouch\Exceptions;
 
 //Define API functions
@@ -50,6 +52,7 @@ class Bones {
     public $route_segments = array();
     public $route_variables = array();
     public $couch;
+    public $couchAdm;
     
     public function __construct() {
         $this->route = $this->get_route();
@@ -57,6 +60,7 @@ class Bones {
         $this->method = $this->get_method();
         //Setup connection to CouchDB
         $this->couch = new CouchClient('http://www.johnselle.com:15984','verge');
+        $this->couchAdm = new CouchAdmin($this->couch);
         
     }
     
@@ -149,6 +153,13 @@ class Bones {
 
     public function request($key) {
         return $this->route_variables[$key];
+    }
+
+    public function display_alert($variable = 'error')
+    {
+        if (isset($this->vars[$variable])) {
+            return "<div class='alert alert-" . $variable . "'><a class='close' data-dismiss='alert'>x</a>" . $this->vars[$variable] . "</div>";
+        }
     }
     
 }
