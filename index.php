@@ -28,4 +28,32 @@ get('/say/:message', function($app) {
     $app->render('home');
 });
 
+get('/login', function($app) {
+    $app->render('user/login');
+});
+
+post('/login', function($app) {
+    $user = new User();
+    $user->name = $app->form('username');
+    $user->password = $app->form('password');
+    //$user->password = $app->form('password');
+    $user->login();
+    echo $user->session_cookie;
+    
+    $app->set('success', "You were logged in " . $user->session_cookie . '!');
+    $app->render('home');
+});
+
+get('/logout', function($app) {
+    User::logout();
+    $app->redirect('/');
+});
+
+get('/user/:username', function($app) {
+    $app->set('user', User::get_by_username($app->request('username')));
+    $app->set('is_current_user', ($app->request('username') == User::current_user() ? true : false));
+    $app->render('user/profile');
+});
+
+resolve();
 ?>

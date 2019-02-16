@@ -160,8 +160,8 @@ class CouchClient extends Couch
             if (!array_key_exists('user', $parts) || !array_key_exists('pass', $parts)) {
                 throw new Exception('You should provide a user and a password to use cookie based authentification');
             }
-            $user = urlencode($parts['user']);
-            $pass = urlencode($parts['pass']);
+            $user = urldecode($parts['user']);
+            $pass = urldecode($parts['pass']);
             $dsn = $parts['scheme'] . '://' . $parts['host'];
             $dsn .= array_key_exists('port', $parts) ? ':' . $parts['port'] : '';
             $dsn .= array_key_exists('path', $parts) ? $parts['path'] : '';

@@ -42,6 +42,10 @@ function delete($route, $callback) {
     Bones::register($route, $callback, 'DELETE');
 }
 
+function resolve() {
+    Bones::resolve();
+}
+
 class Bones {
     private static $instance;
     public static $route_found = false;
@@ -53,15 +57,13 @@ class Bones {
     public $route_variables = array();
     public $couch;
     public $couchAdm;
+    public $couchDBvars = array();
     
     public function __construct() {
         $this->route = $this->get_route();
         $this->route_segments = explode('/', trim($this->route, '/'));
         $this->method = $this->get_method();
-        //Setup connection to CouchDB
-        $this->couch = new CouchClient('http://www.johnselle.com:15984','verge');
-        $this->couchAdm = new CouchAdmin($this->couch);
-        
+        //$this->set_db('http://www.johnselle.com:15984','verge', $this-couchDBvars);
     }
     
     public static function get_instance() {
@@ -155,12 +157,39 @@ class Bones {
         return $this->route_variables[$key];
     }
 
-    public function display_alert($variable = 'error')
-    {
+    public function display_alert($variable = 'error') {
         if (isset($this->vars[$variable])) {
             return "<div class='alert alert-" . $variable . "'><a class='close' data-dismiss='alert'>x</a>" . $this->vars[$variable] . "</div>";
         }
     }
     
+    public function set_db($dbURI, $dbName, $dbVars = [] ) {
+        //Setup default connection to CouchDB
+        $this->couch = new CouchClient($dbURI, $dbName, $dbVars);
+        $this->couchAdm = new CouchAdmin($this->couch);
+        
+    }
+
+    public function redirect($path = '/') {
+        header('Location: ' . $this->make_route($path));
+    }
+    
+    public function error500($exception) {
+        $this->set('exception', $exception);
+        $this->render('error/500');
+        exit;
+    }
+    
+    public function error404() {
+        $this->render('error/404');
+        exit;
+    }
+    
+    public static function resolve() {
+        if (!static::$route_found) {
+            $bones = static::get_instance();
+            $bones->error404();
+        }
+    }
 }
 ?>

@@ -27,8 +27,14 @@
 					href="<?php echo $this->make_route('/')?>">Verge</a>
 				<div class="nav-collapse">
 					<ul class="nav">
-						<li><a href="<?php echo $this->make_route('/') ?>">Home</a></li>
-						<li><a href="<?php echo $this->make_route('/signup')?>">Signup</a></li>
+					<li><a href="<?php echo $this->make_route('/') ?>">Home</a></li>
+					<?php if (User::is_authenticated()) { ?>
+					<li><a href="<?php echo $this->make_route('/user') ?>">My Profile</a></li>
+					<li><a href="<?php echo $this->make_route('/logout') ?>">Logout</a></li>
+					<?php } else { ?>
+					<li><a href="<?php echo $this->make_route('/signup') ?>">Signup</a></li>
+					<li><a href="<?php echo $this->make_route('/login') ?>">Login</a></li>
+					<?php } ?>
 					</ul>
 				</div>
 			</div>
