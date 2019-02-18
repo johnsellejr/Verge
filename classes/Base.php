@@ -2,6 +2,7 @@
 abstract class Base
 {
     protected $_id;
+    protected $_rev;
     protected $type;
     public function __construct($type)
     {
@@ -18,6 +19,9 @@ abstract class Base
         return get_object_vars($this);
     }
     public function to_json() {
+        if (isset($this->_rev) === false) {
+            unset($this->_rev);
+        }
         return json_encode(get_object_vars($this));
     }
 }

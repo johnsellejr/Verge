@@ -166,8 +166,7 @@ class Bones {
     public function set_db($dbURI, $dbName, $dbVars = [] ) {
         //Setup default connection to CouchDB
         $this->couch = new CouchClient($dbURI, $dbName, $dbVars);
-        $this->couchAdm = new CouchAdmin($this->couch);
-        
+        $this->couchAdm = new CouchAdmin($this->couch);        
     }
 
     public function redirect($path = '/') {

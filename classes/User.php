@@ -1,7 +1,5 @@
 <?php
 
-use PHPOnCouch\Exceptions\CouchException;
-
 class User extends Base
 {
     protected $_id;
@@ -10,7 +8,6 @@ class User extends Base
     protected $full_name;
     protected $password;
     protected $roles;
-    protected $session_cookie;
     
     public function __construct()
     {
@@ -42,10 +39,10 @@ class User extends Base
         $bones = new Bones();
         try {
             $bones->set_db('http://www.johnselle.com:15984','verge',['username'=>$this->name,'password'=>$this->password,'cookie_auth'=>TRUE]);
-            $this->session_cookie = $bones->couch->getSessionCookie();
             session_start();
-            $_SESSION['username'] = $this->name;
-            session_write_close();
+            $_SESSION["username"] = $this->name;
+            $_SESSION["cookie"] = $bones->couch->getSessionCookie();
+            session_commit();
         }
         catch(Exception $e) {
             if($e->getCode() == "401") {
@@ -62,13 +59,14 @@ class User extends Base
         //$bones = new Bones();
         //$bones->couch->login(null, null);
         session_start();
+        session_unset();
         session_destroy();
     }
     
     public static function current_user() {
         session_start();
         return $_SESSION['username'];
-        session_write_close();
+        session_commit();
     }
     
     public static function is_authenticated() {
@@ -102,5 +100,11 @@ class User extends Base
             }
         }
         
+    }
+    
+    public function gravatar($size='50') {
+        return
+        'http://www.gravatar.com/avatar/?gravatar_id='
+        .md5(strtolower($this->email)).'&size='.$size;
     }
 }
