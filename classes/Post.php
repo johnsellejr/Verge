@@ -13,7 +13,7 @@ class Post extends Base
         $bones = new Bones();
         session_start();
         //Set the DB Connection before calling CouchAdmin
-        $bones->set_db("http://www.johnselle.com:15984","verge");
+        $bones->set_db($bones->config->db_server.":".$bones->config->db_port,$bones->config->db_database);
         $bones->couch->setSessionCookie($_SESSION["cookie"]);
         session_commit();
         /*
@@ -41,7 +41,7 @@ class Post extends Base
         $posts = array();
         session_start();
         //Set the DB Connection before calling CouchAdmin
-        $bones->set_db("http://www.johnselle.com:15984","verge");
+        $bones->set_db($bones->config->db_server.":".$bones->config->db_port,$bones->config->db_database);
         $bones->couch->setSessionCookie($_SESSION["cookie"]);
         session_commit();
         
@@ -60,7 +60,7 @@ class Post extends Base
         $bones = new Bones();
         session_start();
         //Set the DB Connection before calling CouchAdmin
-        $bones->set_db("http://www.johnselle.com:15984","verge");
+        $bones->set_db($bones->config->db_server.":".$bones->config->db_port,$bones->config->db_database);
         $bones->couch->setSessionCookie($_SESSION["cookie"]);
         session_commit();
         
@@ -81,7 +81,7 @@ class Post extends Base
         session_start();
         
         //Set the DB Connection before calling CouchAdmin
-        $bones->set_db("http://www.johnselle.com:15984","verge");
+        $bones->set_db($bones->config->db_server.":".$bones->config->db_port,$bones->config->db_database);
         $bones->couch->setSessionCookie($_SESSION["cookie"]);
         session_commit();
         

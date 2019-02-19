@@ -21,7 +21,7 @@ class User extends Base
         $this->password = $password;
         
         //Set the DB Connection before calling CouchAdmin
-        $bones->set_db("http://www.johnselle.com:15984","verge",["username"=>"cdbadmin","password"=>"DandBlab5?!"]);
+        $bones->set_db($bones->config->db_server.":".$bones->config->db_port,$bones->config->db_database,["username"=>$bones->config->db_admin_user,"password"=>$bones->config->db_admin_password]);
         //Use CouchAdmin calls to create new user
         try {
             $response = $bones->couchAdm->createUserExtended($this->full_name,$this->email,$this->name,$this->password);
@@ -38,7 +38,7 @@ class User extends Base
     public function login() {
         $bones = new Bones();
         try {
-            $bones->set_db('http://www.johnselle.com:15984','verge',['username'=>$this->name,'password'=>$this->password,'cookie_auth'=>TRUE]);
+            $bones->set_db($bones->config->db_server.":".$bones->config->db_port,$bones->config->db_database,['username'=>$this->name,'password'=>$this->password,'cookie_auth'=>TRUE]);
             session_start();
             $_SESSION["username"] = $this->name;
             $_SESSION["cookie"] = $bones->couch->getSessionCookie();
@@ -82,7 +82,7 @@ class User extends Base
         $user = new User();
         
         //Set the DB Connection before calling CouchAdmin
-        $bones->set_db("http://www.johnselle.com:15984","verge",["username"=>"cdbadmin","password"=>"DandBlab5?!"]);
+        $bones->set_db($bones->config->db_server.":".$bones->config->db_port,$bones->config->db_database,["username"=>$bones->config->db_admin_user,"password"=>$bones->config->db_admin_password]);
         //Use CouchAdmin calls to retrieve user
         try {
             $response = $bones->couchAdm->getUser($username);
@@ -98,8 +98,7 @@ class User extends Base
             } else {
                 $bones->error500($e);
             }
-        }
-        
+        }        
     }
     
     public function gravatar($size='50') {

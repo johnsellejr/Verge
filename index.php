@@ -1,8 +1,6 @@
 <?php
 
 include 'lib/bones.php';
-define('ADMIN_USER', 'cdbadmin');
-define('ADMIN_PASSWORD', 'DandBlab5?!');
 
 function get_user_profile($app) {
     $app->set('user', User::get_by_username($app->request('username')));

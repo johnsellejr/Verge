@@ -6,6 +6,7 @@ error_reporting(E_ERROR | E_PARSE);
 define('ROOT', __DIR__ . '/..');
 
 require_once ROOT . '/lib/bootstrap.php';
+require_once ROOT . '/lib/configuration.php';
 
 //function my_autoloader($classname) {
 //    include_once(ROOT . "/classes/" . strtolower($classname) . ".php");
@@ -58,12 +59,14 @@ class Bones {
     public $couch;
     public $couchAdm;
     public $couchDBvars = array();
+    public $config;
     
     public function __construct() {
         $this->route = $this->get_route();
         $this->route_segments = explode('/', trim($this->route, '/'));
         $this->method = $this->get_method();
-        //$this->set_db('http://www.johnselle.com:15984','verge', $this-couchDBvars);
+        $this->config = new Configuration();
+        //$this->set_db($this->config-db_server . ":" . $this->config-db_port,$this->config-db_database, $this-couchDBvars);
     }
     
     public static function get_instance() {
@@ -162,11 +165,14 @@ class Bones {
             return "<div class='alert alert-" . $variable . "'><a class='close' data-dismiss='alert'>x</a>" . $this->vars[$variable] . "</div>";
         }
     }
-    
-    public function set_db($dbURI, $dbName, $dbVars = [] ) {
-        //Setup default connection to CouchDB
-        $this->couch = new CouchClient($dbURI, $dbName, $dbVars);
-        $this->couchAdm = new CouchAdmin($this->couch);        
+
+    /****
+     * $dbServer should be host:port (e.g. localhost:5984)
+     * 
+     ****/
+    public function set_db($dbServer, $dbName, $dbVars = [] ) {
+        $this->couch = new CouchClient("http://".$dbServer, $dbName, $dbVars);
+        $this->couchAdm = new CouchAdmin($this->couch);
     }
 
     public function redirect($path = '/') {
